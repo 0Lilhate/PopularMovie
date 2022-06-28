@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/mobile_navigation"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@+id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.example.retrofitdemo.fragment.HomeFragment"
+        android:label="Home"
+        tools:layout="@layout/home_fragment" >
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_favorite"
+            app:destination="@id/navigation_favorite" />
+
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_movie_info"
+            app:destination="@id/navigation_movie_info" />
+
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_favorite"
+        android:name="com.example.retrofitdemo.fragment.FavoriteActivityList"
+        android:label="Favorite"
+        tools:layout="@layout/activity_favorite_list" >
+        <action
+            android:id="@+id/action_navigation_favorite_to_navigation_home2"
+            app:destination="@id/navigation_home" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_movie_info"
+        android:name="com.example.retrofitdemo.fragment.MovieInfoActivity"
+        android:label="Info"
+        tools:layout="@layout/activity_movie_info">
+
+        <action
+            android:id="@+id/action_navigation_movie_info_to_navigation_home"
+            app:destination="@id/navigation_home" />
+    </fragment>
+
+
+
+
+
+</navigation>
