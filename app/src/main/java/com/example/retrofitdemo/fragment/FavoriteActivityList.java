@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
+import android.widget.Toast;
 
 import com.example.retrofitdemo.R;
 import com.example.retrofitdemo.adapter.AdapterFavoriteMovie;
@@ -23,6 +26,7 @@ import com.example.retrofitdemo.adapter.AdapterPopularMovie;
 import com.example.retrofitdemo.databinding.ActivityFavoriteListBinding;
 import com.example.retrofitdemo.databinding.HomeFragmentBinding;
 import com.example.retrofitdemo.model.Result;
+import com.example.retrofitdemo.viewmodel.FragmentViewModel;
 import com.example.retrofitdemo.viewmodel.MainActivityViewModel;
 
 import java.util.ArrayList;
@@ -34,6 +38,8 @@ public class FavoriteActivityList extends Fragment {
     AdapterFavoriteMovie adapterFavoriteMovie;
     ArrayList<Result> resultArrayList;
     RecyclerView recyclerView;
+    FragmentViewModel fragmentViewModel;
+    NavController navController;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,6 +53,7 @@ public class FavoriteActivityList extends Fragment {
         activityFavoriteListBinding = ActivityFavoriteListBinding.inflate(inflater,container,false);
 
         viewModel = new ViewModelProvider(this).get(MainActivityViewModel.class);
+        fragmentViewModel = new ViewModelProvider(this).get(FragmentViewModel.class);
 
 
 
@@ -56,7 +63,7 @@ public class FavoriteActivityList extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-
+        navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_activity_main2);
         getAllFavoriteMovies();
     }
 
@@ -66,7 +73,16 @@ public class FavoriteActivityList extends Fragment {
             public void onChanged(List<Result> results) {
                 resultArrayList = (ArrayList<Result>) results;
 
-                initAdapter();
+                if(resultArrayList.isEmpty()){
+                    Log.d("FavoriteList", "list is null");
+                    activityFavoriteListBinding.textView2.setText("У вас пуст список любимых");
+                }
+                else {
+                    Log.d("FavoriteList", "list is not null");
+                    initAdapter();
+                }
+
+
             }
         });
     }
@@ -78,7 +94,20 @@ public class FavoriteActivityList extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapterFavoriteMovie);
 
+        onClickItemAdapterFavorite();
+
         ItemTouchLeft();
+    }
+
+    private void onClickItemAdapterFavorite(){
+        adapterFavoriteMovie.setOnClickItemList(new AdapterPopularMovie.onClickItemMovie() {
+            @Override
+            public void onCLickItem(Result result) {
+
+                fragmentViewModel.getResult().postValue(result);
+                navController.navigate(R.id.navigation_movie_info);
+            }
+        });
     }
 
     private void ItemTouchLeft() {

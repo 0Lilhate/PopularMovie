@@ -1,6 +1,5 @@
 package com.example.retrofitdemo.model.roommodel;
 
-import android.content.Intent;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
@@ -30,6 +29,5 @@ public interface ResultDao {
 
     @Delete
     public void delete(Result favoriteMovie);
-
 
 }

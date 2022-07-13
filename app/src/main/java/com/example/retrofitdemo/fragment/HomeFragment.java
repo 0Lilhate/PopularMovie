@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.retrofitdemo.R;
+import com.example.retrofitdemo.adapter.AdapterFavoriteMovie;
 import com.example.retrofitdemo.adapter.AdapterPopularMovie;
 import com.example.retrofitdemo.databinding.HomeFragmentBinding;
 import com.example.retrofitdemo.model.Result;
@@ -28,6 +29,7 @@ import com.example.retrofitdemo.viewmodel.FragmentViewModel;
 import com.example.retrofitdemo.viewmodel.MainActivityViewModel;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class HomeFragment extends Fragment {
@@ -35,14 +37,14 @@ public class HomeFragment extends Fragment {
     private SwipeRefreshLayout swipeRefreshLayout;
     private MainActivityViewModel mainActivityViewModel;
     private RecyclerView recyclerView;
-    private PagedList<Result> results;
-    private AdapterPopularMovie adapterPopularMovie;
-    private Bundle bundle;
     private NavController navigation;
+    private ArrayList<Result> resultArrayList;
 
     private FragmentViewModel fragmentViewModel;
 
     private static final String API_KEY = "7c77b786e9a06ef5a5b26cd11dade856";
+
+    private AdapterFavoriteMovie adapterFavoriteMovie;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -89,8 +91,10 @@ public class HomeFragment extends Fragment {
     private void initMoviePopularAdapter() {
 
         recyclerView = homeFragmentBinding.recyclerView;
-        adapterPopularMovie = new AdapterPopularMovie(getContext());
-        adapterPopularMovie.submitList(results);
+        adapterFavoriteMovie = new AdapterFavoriteMovie();
+        adapterFavoriteMovie.setList(resultArrayList);
+        Log.d("RETROFIT_DEBUG", resultArrayList.get(2).getPosterPath());
+
 
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
             GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(),2);
@@ -103,20 +107,20 @@ public class HomeFragment extends Fragment {
 
 
 
-        mainActivityViewModel.getAllRoomFavoriteMovies().observe(this, new Observer<List<Result>>() {
-            @Override
-            public void onChanged(List<Result> results) {
-                for(Result result1: results){
-                    Log.d("CheckRoom", "Room id: " + result1.getId().toString());
-                }
-            }
-        });
+//        mainActivityViewModel.getAllRoomFavoriteMovies().observe(this, new Observer<List<Result>>() {
+//            @Override
+//            public void onChanged(List<Result> results) {
+//                for(Result result1: results){
+//                    Log.d("CheckRoom", "Room id: " + result1.getId().toString());
+//                }
+//            }
+//        });
 
 
 
-        recyclerView.setAdapter(adapterPopularMovie);
+        recyclerView.setAdapter(adapterFavoriteMovie);
 
-        adapterPopularMovie.setOnClickItemList(new AdapterPopularMovie.onClickItemMovie() {
+        adapterFavoriteMovie.setOnClickItemList(new AdapterPopularMovie.onClickItemMovie() {
             @Override
             public void onCLickItem(Result resultOnclick) {
 
@@ -143,13 +147,6 @@ public class HomeFragment extends Fragment {
                 });
 
 
-                Result tempResult = mainActivityViewModel.getFavoriteRoomMovies(675353);
-                //338953
-                Log.d("CheckRoom", "Retrofit id: " + resultOnclick.getId().toString());
-
-
-
-
 
             }
         });
@@ -160,21 +157,14 @@ public class HomeFragment extends Fragment {
 
     private void getResultArrayList() {
 
-//        mainActivityViewModel.getAllMovies().observe(this, new Observer<List<Result>>() {
-//            @Override
-//            public void onChanged(List<Result> results) {
-//                resultArrayList = (ArrayList<Result>) results;
-//                initMoviePopularAdapter();
-//            }
-//        });
-
-        mainActivityViewModel.getPagedListLiveData().observe(this, new Observer<PagedList<Result>>() {
+        mainActivityViewModel.getAllMovies().observe(this, new Observer<List<Result>>() {
             @Override
-            public void onChanged(PagedList<Result> resultArrayList) {
-                results = resultArrayList;
+            public void onChanged(List<Result> results) {
+                resultArrayList = (ArrayList<Result>) results;
                 initMoviePopularAdapter();
             }
         });
+
 
     }
 }

@@ -13,14 +13,16 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+
         app:cardCornerRadius="10sp"
         app:cardUseCompatPadding="true"
         android:elevation="100sp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="5sp">
+            android:layout_height="match_parent"
+            android:padding="5sp"
+            android:background="@color/black">
 
             <ImageView
                 android:id="@+id/imageMovie"
@@ -36,6 +38,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@{movie.originalTitle}"
+                android:textColor="@color/white"
                 app:layout_constraintStart_toStartOf="@+id/imageMovie"
                 app:layout_constraintTop_toBottomOf="@+id/imageMovie" />
 
@@ -44,6 +47,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5sp"
+                android:textColor="@color/white"
                 android:text="@{movie.popularity.toString()}"
                 app:layout_constraintStart_toStartOf="@+id/movie_name"
                 app:layout_constraintTop_toBottomOf="@+id/movie_name" />
